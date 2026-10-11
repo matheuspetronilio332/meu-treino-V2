@@ -1,0 +1,5 @@
+# Fim de linha consistente (a v1 tinha CRLF misturado)
+* text=auto eol=lf
+*.bat text eol=crlf
+*.png binary
+*.ico binary
