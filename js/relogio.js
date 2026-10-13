@@ -44,7 +44,7 @@ export function criarRelogio({ obterConfig }) {
 
   function iniciar(fases) {
     if (!fases.length) return false;
-    alertas.destravar();
+    alertas.destravar(obterConfig());
     motor.configurar(fases);
     motor.iniciar();
     ligarLaco();
@@ -73,7 +73,7 @@ export function criarRelogio({ obterConfig }) {
       emitir();
     },
     retomar() {
-      alertas.destravar();
+      alertas.destravar(obterConfig());
       motor.retomar();
       ligarLaco();
       telaLigada();

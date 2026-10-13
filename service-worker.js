@@ -9,7 +9,7 @@
  * Ao publicar uma versão nova, aumente VERSAO (e VERSAO_APP em js/util.js): isso faz o navegador
  * instalar o novo service worker, limpar caches antigos e mostrar o aviso "Atualizar".
  */
-const VERSAO = 'meu-treino-v2.0.0';
+const VERSAO = 'meu-treino-v2.1.0';
 const PREFIXOS_DESTE_APP = ['meu-treino-', 'treino-timer-']; // não mexe em caches de outros apps do mesmo domínio
 const TEMPO_LIMITE_REDE_MS = 4000;
 

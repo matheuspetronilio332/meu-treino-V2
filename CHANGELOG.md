@@ -1,5 +1,11 @@
 # Histórico de mudanças
 
+## 2.1.0
+
+- **Som do alerta personalizável** (Ajustes > Som do alerta, com botão Ouvir): **Gongo de luta** (novo padrão), **Sino de boxe** (três batidas no fim), Bipe simples e **Meu arquivo** (`sounds/alerta.mp3`).
+- Os sons de gongo e sino são sintetizados pelo navegador (sem arquivo, funcionam offline). Se o arquivo próprio não existir, o app toca o gongo em vez de ficar mudo.
+- Novo guia em `sounds/LEIA-ME.md`.
+
 ## 2.0.0
 
 Reescrita da versão 1 (um único `index.html` com timer e registro de peso). A migração dos pesos antigos é automática.

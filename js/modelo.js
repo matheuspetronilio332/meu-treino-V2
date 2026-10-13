@@ -51,6 +51,7 @@ export function configPadrao() {
   return {
     tema: 'auto',
     som: true,
+    somAlerta: 'gongo',
     vibracao: true,
     notificacao: false,
     telaAcesa: true,
@@ -80,6 +81,7 @@ export function sanitizarConfig(c) {
   return {
     tema: ['auto', 'claro', 'escuro'].includes(c.tema) ? c.tema : p.tema,
     som: booleano(c.som, p.som),
+    somAlerta: ['gongo', 'sino', 'bipe', 'arquivo'].includes(c.somAlerta) ? c.somAlerta : p.somAlerta,
     vibracao: booleano(c.vibracao, p.vibracao),
     notificacao: booleano(c.notificacao, p.notificacao),
     telaAcesa: booleano(c.telaAcesa, p.telaAcesa),

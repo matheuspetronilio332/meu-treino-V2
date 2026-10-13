@@ -6,7 +6,7 @@ import { mesclar } from '../modelo.js';
 import {
   LIMITE_IMPORTACAO, baixarArquivo, gerarCSVPesos, gerarCSVTreinos, gerarJSON, lerImportacao,
 } from '../exportacao.js';
-import { pedirPermissaoNotificacao } from '../alertas.js';
+import { ouvirSom, pedirPermissaoNotificacao } from '../alertas.js';
 import * as pwa from '../pwa.js';
 
 export function montarAjustes({ painel, store, relogio, toast, persistir, aplicarTema, atualizarTudo }) {
@@ -28,6 +28,21 @@ export function montarAjustes({ painel, store, relogio, toast, persistir, aplica
     const tema = el('select', { id: 'ajuste-tema' },
       [['auto', 'Automático (segue o aparelho)'], ['escuro', 'Escuro'], ['claro', 'Claro']].map(([v, r]) => el('option', { value: v, selected: c.tema === v }, r)));
     tema.addEventListener('change', () => { cfg().tema = tema.value; persistir(); aplicarTema(); });
+
+    // som do alerta
+    const estiloSom = el('select', { id: 'ajuste-som-estilo' },
+      [['gongo', 'Gongo de luta'], ['sino', 'Sino de boxe (3 batidas no fim)'], ['bipe', 'Bipe simples'], ['arquivo', 'Meu arquivo (sounds/alerta.mp3)']]
+        .map(([v, r]) => el('option', { value: v, selected: c.somAlerta === v }, r)));
+    const botaoOuvir = el('button', {
+      type: 'button', class: 'botao botao-sec',
+      onClick: async () => {
+        const r = await ouvirSom(cfg().somAlerta);
+        if (r.usouFallback) toast('Não encontrei o arquivo em sounds/. Toquei o gongo no lugar. Veja sounds/LEIA-ME.md.', { duracao: 7000 });
+      },
+    }, 'Ouvir');
+    estiloSom.addEventListener('change', () => { cfg().somAlerta = estiloSom.value; persistir(); botaoOuvir.click(); });
+    const linhaSom = el('div', { class: 'linha-som' },
+      el('div', { class: 'campo' }, el('label', { for: 'ajuste-som-estilo' }, 'Som do alerta'), estiloSom), botaoOuvir);
 
     // descanso
     const descanso = el('input', { id: 'ajuste-descanso', type: 'number', inputmode: 'numeric', min: 5, max: 900, step: 5, value: c.descansoPadrao });
@@ -98,6 +113,7 @@ export function montarAjustes({ painel, store, relogio, toast, persistir, aplica
 
       el('div', { class: 'bloco' }, el('h3', {}, 'Timer e alertas'),
         interruptor('aj-som', 'Som', 'Toca um aviso a cada fase e no fim.', c.som, (v) => { cfg().som = v; persistir(); }),
+        linhaSom,
         interruptor('aj-vib', 'Vibração', 'Funciona em celulares Android.', c.vibracao, (v) => { cfg().vibracao = v; persistir(); }),
         interruptor('aj-notif', 'Notificação', 'Avisa quando o app está em segundo plano.', c.notificacao, async (v, caixa) => {
           if (!v) { cfg().notificacao = false; persistir(); return; }

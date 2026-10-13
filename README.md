@@ -8,7 +8,7 @@ App de treino que funciona direto no navegador, **sem internet e sem instalar na
 
 | Aba | Recursos |
 | --- | --- |
-| **Timer** | Contagem regressiva com anel de progresso, tempos rápidos (30 s a 3 min), modo **intervalado** (trabalho, descanso e rodadas), pausar e retomar, aviso por som, vibração e notificação, tela sempre ligada enquanto roda |
+| **Timer** | Contagem regressiva com anel de progresso, tempos rápidos (30 s a 3 min), modo **intervalado** (trabalho, descanso e rodadas), pausar e retomar, aviso por **gongo de luta**, sino de boxe, bipe ou um arquivo seu, vibração e notificação, tela sempre ligada enquanto roda |
 | **Treinos** | Rotinas (Treino A, B...) com séries, repetições e carga; treino em andamento com série a série; **descanso automático** ao concluir cada série; histórico; **recordes de carga** |
 | **Peso** | Registro por data, resumo (atual, variação, média de 7 dias), **meta**, **gráfico** (30 dias, 90 dias ou tudo), histórico com "desfazer", medidas corporais (cintura, braço etc.) |
 | **Ajustes** | Tema claro/escuro/automático, alertas, **backup e importação (JSON)**, exportação em **CSV** (abre no Excel), instalar o app, apagar dados |
@@ -32,6 +32,17 @@ O app usa módulos ES e service worker, então precisa ser servido por `http://`
 
 Requer apenas o Python 3 instalado. Para outra porta: `./iniciar.sh 9000`.
 
+## Trocar o som do alerta
+
+Em **Ajustes > Som do alerta** há quatro opções, com botão **Ouvir** para testar:
+
+- **Gongo de luta** (padrão): uma batida grave e longa, no começo de cada fase e no fim.
+- **Sino de boxe**: uma batida na troca de fase e **três seguidas** no fim, como o fim do round.
+- **Bipe simples**: o aviso curto da versão anterior.
+- **Meu arquivo**: usa uma gravação sua em `sounds/alerta.mp3`. Veja o passo a passo em [`sounds/LEIA-ME.md`](sounds/LEIA-ME.md).
+
+Os dois primeiros são sintetizados pelo navegador: funcionam offline e não envolvem direitos autorais. Para mudar o timbre deles, os parâmetros ficam no começo de `js/alertas.js` (`GONGO` e `SINO`).
+
 ## Seus dados
 
 - Tudo é salvo no `localStorage` do navegador, neste aparelho. Nada é enviado para servidor nenhum.
@@ -44,7 +55,7 @@ Requer apenas o Python 3 instalado. Para outra porta: `./iniciar.sh 9000`.
 
 - **Timer em segundo plano.** O tempo mostrado fica sempre correto (ele é calculado pelo relógio, não por contagem de ticks), mas navegadores podem suspender a página com a tela bloqueada, e aí o **alarme só soa quando você voltar ao app**. Por isso o app mantém a tela ligada enquanto o timer roda (Wake Lock, nos navegadores que suportam). Não há notificação "push" com o app totalmente fechado.
 - **iPhone/iPad:** não existe vibração para páginas web, e notificações só funcionam com o app instalado na tela inicial (iOS 16.4 ou superior).
-- O som é gerado pelo próprio navegador (Web Audio). Em alguns aparelhos ele só é liberado depois do primeiro toque na tela, o que acontece ao tocar em Iniciar.
+- O som é gerado pelo próprio navegador (Web Audio). Em alguns aparelhos ele só é liberado depois do primeiro toque na tela, o que acontece ao tocar em Iniciar. O gongo tem notas graves, e alto-falantes pequenos de celular as reproduzem com menos força: se achar baixo, use o **Sino de boxe** ou um arquivo seu.
 - Foi testado em Chromium (testes automatizados, incluindo modo offline). Não foi testado em aparelhos físicos iOS/Safari ou Firefox.
 
 ## Estrutura
@@ -62,7 +73,7 @@ meu-treino/
 │   ├── store.js             gravação no localStorage (tolerante a falhas)
 │   ├── timer.js             motor do cronômetro (sem DOM)
 │   ├── relogio.js           liga o timer a som, vibração e tela ligada
-│   ├── alertas.js           som (Web Audio), vibração e notificações
+│   ├── alertas.js           sons (gongo, sino, bipe, arquivo), vibração e notificações
 │   ├── tela-acesa.js        Wake Lock
 │   ├── peso.js, treinos.js  regras de peso e de treino (sem DOM)
 │   ├── grafico.js           gráfico de linha em SVG
@@ -71,6 +82,7 @@ meu-treino/
 │   ├── ui.js                helpers de interface (sem innerHTML)
 │   ├── util.js              datas, números, formatação
 │   └── views/               uma tela por arquivo (timer, treinos, peso, ajustes)
+├── sounds/                  coloque aqui o seu alerta.mp3 (opcional)
 ├── tests/                   testes automatizados (Node, sem dependências)
 ├── tools/gerar-icones.py    regera os ícones PNG (opcional)
 ├── iniciar.bat / iniciar.sh servidor local de um clique
@@ -85,7 +97,7 @@ Com o Node 20 ou superior:
 npm test
 ```
 
-São 42 testes que cobrem o cronômetro (inclusive "dormir" por vários segundos sem ticks), validação de dados, migração da versão 1, dados corrompidos, backup e importação (inclusive arquivos maliciosos), recordes, gráfico e a consistência do cache offline.
+São 47 testes que cobrem o cronômetro (inclusive "dormir" por vários segundos sem ticks), validação de dados, migração da versão 1, dados corrompidos, backup e importação (inclusive arquivos maliciosos), recordes, gráfico e a consistência do cache offline.
 
 ## Publicando uma nova versão
 

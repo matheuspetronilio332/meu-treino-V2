@@ -90,3 +90,11 @@ test('mesclar: pesos por data, demais por id, sem apagar nada', () => {
   assert.deepEqual(resumo, { pesos: 2, medidas: 0, rotinas: 1, treinos: 0 });
   assert.equal(mesclar(estado, imp).resumo.rotinas, 0); // idempotente
 });
+
+test('som do alerta: padrão é o gongo e valores inválidos voltam ao padrão', () => {
+  assert.equal(estadoPadrao().config.somAlerta, 'gongo');
+  assert.equal(sanitizar({ config: { somAlerta: 'sino' } }).config.somAlerta, 'sino');
+  assert.equal(sanitizar({ config: { somAlerta: 'arquivo' } }).config.somAlerta, 'arquivo');
+  assert.equal(sanitizar({ config: { somAlerta: 'javascript:alert(1)' } }).config.somAlerta, 'gongo');
+  assert.equal(sanitizar({ config: {} }).config.somAlerta, 'gongo'); // quem já usava a v2.0 ganha o gongo
+});

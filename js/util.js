@@ -1,6 +1,6 @@
 // Utilitários pequenos, sem dependências e sem acesso ao DOM (testáveis no Node).
 
-export const VERSAO_APP = '2.0.0';
+export const VERSAO_APP = '2.1.0';
 
 export class ErroValidacao extends Error {
   constructor(mensagem) {
